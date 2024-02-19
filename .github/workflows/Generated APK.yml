@@ -23,7 +23,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+      
       # Set Current Date As Env Variable
       - name: Set current date as env variable
         run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
@@ -40,28 +43,28 @@ jobs:
           cache: 'gradle'
 
       - name: Change wrapper permissions
-        run: chmod +x ./easycontrol/gradlew
+        run: chmod +x ./gradlew
 
       # Run Tests Build
       - name: Run gradle tests
-        run: ./easycontrol/gradlew test
+        run: gradlew test
 
       # Run Build Project
       - name: Build gradle project
-        run: ./easycontrol/gradlew build
+        run: gradlew build
 
       # Create APK Debug
       - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
-        run: ./easycontrol/gradlew assembleDebug
+        run: gradlew assembleDebug
 
       # Create APK Release
       - name: Build apk release project (APK) - ${{ env.main_project_module }} module
-        run: ./easycontrol/gradlew assemble
+        run: gradlew assemble
 
       # Create Bundle AAB Release
       # Noted for main module build [main_project_module]:bundleRelease
       - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
-        run: ./easycontrol/gradlew ${{ env.main_project_module }}:bundleRelease
+        run: gradlew ${{ env.main_project_module }}:bundleRelease
 
       # Upload Artifact Build
       # Noted For Output [main_project_module]/build/outputs/apk/debug/
